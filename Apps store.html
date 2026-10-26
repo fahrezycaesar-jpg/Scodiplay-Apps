@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCODI PLAY APPS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background-color: #0b0b0d;
+            color: #f1f1f1;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        .loader-screen {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader-screen img {
+            width: 220px;
+            max-width: 60%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        body.loading {
+            overflow: hidden;
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        /* Latar belakang dekoratif halus (versi gelap) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: -200px;
+            right: -200px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(120, 80, 255, 0.18) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            bottom: -250px;
+            left: -250px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(180, 120, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ===== BILAH NAVIGASI ATAS (GELAP) ===== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 0 28px;
+            background: #111114;
+            border-bottom: 1px solid #222228;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .navbar .brand-logo {
+            height: 55px;
+            width: auto;
+            max-width: 220px;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.25s ease;
+            flex-shrink: 1;
+            min-width: 0;
+        }
+
+        .navbar .brand-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* ===== TOMBOL TENTANG KAMI (GRADASI UNGU TUA → PUTIH) ===== */
+        .btn-about {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #2e1065 0%, #4c1d95 38%, #7c3aed 72%, #c4b5fd 100%);
+            border: 1px solid rgba(196, 181, 253, 0.45);
+            border-radius: 999px;
+            cursor: pointer;
+            overflow: hidden;
+            white-space: nowrap;
+            box-shadow: 0 4px 18px rgba(109, 40, 217, 0.45),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-about::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                100deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.35) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-20deg);
+            transition: left 0.6s ease;
+            pointer-events: none;
+        }
+
+        .btn-about:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 8px 26px rgba(139, 92, 246, 0.6),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        .btn-about:hover::after {
+            left: 130%;
+        }
+
+        .btn-about:active {
+            transform: translateY(0) scale(0.97);
+        }
+
+        .btn-about svg {
+            flex-shrink: 0;
+            opacity: 0.95;
+        }
+
+        /* ===== TOMBOL LAPORKAN MASALAH ===== */
+        .btn-report {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            color: #e2e2ea;
+            background: rgba(255, 255, 255, 0.045);
+            border: 1px solid rgba(167, 139, 250, 0.38);
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.25s ease, border-color 0.25s ease,
+                        color 0.25s ease, transform 0.25s ease,
+                        box-shadow 0.25s ease;
+        }
+
+        .btn-report:hover {
+            color: #ffffff;
+            background: rgba(124, 58, 237, 0.22);
+            border-color: rgba(167, 139, 250, 0.75);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(109, 40, 217, 0.4);
+        }
+
+        .btn-report:active {
+            transform: translateY(0) scale(0.97);
+        }
+
+        .btn-report svg {
+            flex-shrink: 0;
+            opacity: 0.95;
+        }
+
+        /* ===== SLIDER BANNER (VIDEO & FOTO) ===== */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            flex-shrink: 0;
+            touch-action: pan-y;
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            will-change: transform;
+        }
+
+        .slide {
+            min-width: 100%;
+            position: relative;
+            line-height: 0;
+        }
+
+        .slide video,
+        .slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .slider-container::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 55%;
+            background: linear-gradient(
+                to bottom,
+                rgba(11, 11, 13, 0) 0%,
+                rgba(11, 11, 13, 0.55) 45%,
+                #0b0b0d 100%
+            );
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* ===== GAMBAR DI BAWAH BANNER ===== */
+        .image-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px 30px;
+            flex-shrink: 0;
+            margin-top: -20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .bottom-image {
+            width: 320px;
+            max-width: 80%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            transition: transform 0.25s ease;
+        }
+
+        .bottom-image:hover {
+            transform: scale(1.03);
+        }
+
+        /* ===== AREA KONTEN ===== */
+        .content {
+            flex: 1;
+            padding: 10px 28px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ============================================================
+           HALAMAN TENTANG KAMI
+           ============================================================ */
+        .about-page {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            background:
+                radial-gradient(circle at 100% 0%, rgba(124, 58, 237, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 0% 100%, rgba(167, 139, 250, 0.16) 0%, transparent 45%),
+                #0b0b0d;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(26px);
+            transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+        }
+
+        .about-page.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .about-page.open .about-inner {
+            animation: fadeUp 0.5s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .about-header {
+            position: sticky;
+            top: 0;
+            z-index: 6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px 24px;
+            background: rgba(11, 11, 13, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px 9px 12px;
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #d6d6dd;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background 0.25s ease, border-color 0.25s ease,
+                        color 0.25s ease, transform 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-back:hover {
+            color: #ffffff;
+            background: rgba(124, 58, 237, 0.22);
+            border-color: rgba(167, 139, 250, 0.55);
+            transform: translateX(-3px);
+        }
+
+        .btn-back:active {
+            transform: translateX(-3px) scale(0.96);
+        }
+
+        .about-brand {
+            height: 38px;
+            width: auto;
+            max-width: 150px;
+            object-fit: contain;
+            opacity: 0.9;
+        }
+
+        .about-inner {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 34px 24px 90px;
+        }
+
+        .about-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            margin-bottom: 16px;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            color: #c4b5fd;
+            background: rgba(124, 58, 237, 0.14);
+            border: 1px solid rgba(167, 139, 250, 0.28);
+            border-radius: 999px;
+        }
+
+        .about-eyebrow::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #a78bfa;
+            box-shadow: 0 0 10px rgba(167, 139, 250, 0.95);
+        }
+
+        .about-title {
+            font-size: clamp(25px, 5.4vw, 40px);
+            font-weight: 800;
+            line-height: 1.18;
+            letter-spacing: -0.6px;
+            margin-bottom: 18px;
+        }
+
+        .about-title .grad {
+            background: linear-gradient(120deg, #c4b5fd 0%, #a78bfa 35%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .about-lead {
+            font-size: 15px;
+            line-height: 1.85;
+            color: #c3c3cd;
+            max-width: 720px;
+        }
+
+        .about-section {
+            margin-top: 44px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 16.5px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            color: #f1f1f1;
+            margin-bottom: 18px;
+        }
+
+        .section-title::before {
+            content: "";
+            width: 4px;
+            height: 21px;
+            border-radius: 4px;
+            background: linear-gradient(180deg, #c4b5fd, #6d28d9);
+            box-shadow: 0 0 14px rgba(124, 58, 237, 0.9);
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 16px;
+            padding: 15px 18px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.075);
+            transition: border-color 0.25s ease, background 0.25s ease,
+                        box-shadow 0.25s ease;
+        }
+
+        .info-item:hover {
+            background: rgba(124, 58, 237, 0.09);
+            border-color: rgba(167, 139, 250, 0.4);
+            box-shadow: 0 8px 24px rgba(76, 29, 149, 0.22);
+        }
+
+        .info-item .label {
+            flex: 0 0 auto;
+            min-width: 195px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #a78bfa;
+            letter-spacing: 0.2px;
+        }
+
+        .info-item .value {
+            flex: 1 1 240px;
+            font-size: 14px;
+            line-height: 1.65;
+            color: #e6e6ea;
+        }
+
+        .pillar-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .pillar {
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: linear-gradient(160deg, rgba(124, 58, 237, 0.12) 0%, rgba(255, 255, 255, 0.022) 65%);
+            border: 1px solid rgba(167, 139, 250, 0.18);
+            transition: transform 0.25s ease, border-color 0.25s ease,
+                        box-shadow 0.25s ease;
+        }
+
+        .pillar:hover {
+            transform: translateY(-3px);
+            border-color: rgba(167, 139, 250, 0.48);
+            box-shadow: 0 12px 32px rgba(76, 29, 149, 0.32);
+        }
+
+        .pillar h4 {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 9px;
+            letter-spacing: 0.2px;
+        }
+
+        .pillar h4::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            flex-shrink: 0;
+            border-radius: 2px;
+            background: linear-gradient(135deg, #c4b5fd, #7c3aed);
+            box-shadow: 0 0 10px rgba(167, 139, 250, 0.85);
+            transform: rotate(45deg);
+        }
+
+        .pillar p {
+            font-size: 13.8px;
+            line-height: 1.78;
+            color: #b7b7c2;
+        }
+
+        .roadmap {
+            display: grid;
+            gap: 13px;
+            list-style: none;
+            counter-reset: step;
+        }
+
+        .roadmap li {
+            display: flex;
+            gap: 15px;
+            padding: 17px 18px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.032);
+            border: 1px solid rgba(255, 255, 255, 0.075);
+            transition: border-color 0.25s ease, background 0.25s ease,
+                        transform 0.25s ease;
+        }
+
+        .roadmap li:hover {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: rgba(167, 139, 250, 0.42);
+            transform: translateX(4px);
+        }
+
+        .roadmap li::before {
+            counter-increment: step;
+            content: counter(step, decimal-leading-zero);
+            flex: 0 0 auto;
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            font-size: 12.5px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #a78bfa 100%);
+            box-shadow: 0 0 18px rgba(124, 58, 237, 0.55);
+        }
+
+        .roadmap .rm-body h4 {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 7px;
+            letter-spacing: 0.2px;
+        }
+
+        .roadmap .rm-body p {
+            font-size: 13.8px;
+            line-height: 1.78;
+            color: #b7b7c2;
+        }
+
+        .about-footer {
+            margin-top: 52px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.075);
+            text-align: center;
+            font-size: 12.5px;
+            letter-spacing: 0.4px;
+            color: #6f6f7d;
+        }
+
+        .about-footer span {
+            color: #a78bfa;
+            font-weight: 600;
+        }
+
+        /* ============================================================
+           POPUP LAPORKAN MASALAH
+           ============================================================ */
+        .report-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .report-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .report-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
+        }
+
+        .report-content {
+            position: relative;
+            width: 100%;
+            max-width: 460px;
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 26px 24px 24px;
+            background:
+                radial-gradient(circle at 100% 0%, rgba(124, 58, 237, 0.2) 0%, transparent 55%),
+                linear-gradient(160deg, #17171d 0%, #101014 100%);
+            border: 1px solid rgba(167, 139, 250, 0.28);
+            border-radius: 20px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.75),
+                        0 0 55px rgba(124, 58, 237, 0.18),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            transform: translateY(22px) scale(0.95);
+            transition: transform 0.38s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+        }
+
+        .report-modal.open .report-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .report-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .report-head-text h3 {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .report-head-text p {
+            font-size: 13px;
+            line-height: 1.55;
+            color: #9c9cae;
+        }
+
+        .report-close {
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            font-size: 20px;
+            line-height: 1;
+            color: #b9b9c6;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.22s ease, color 0.22s ease,
+                        border-color 0.22s ease, transform 0.22s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .report-close:hover {
+            color: #ffffff;
+            background: rgba(220, 38, 38, 0.2);
+            border-color: rgba(248, 113, 113, 0.55);
+            transform: rotate(90deg);
+        }
+
+        .report-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .report-field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .report-field label {
+            font-size: 12.5px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            color: #c4b5fd;
+        }
+
+        .report-field label .req {
+            color: #f472b6;
+            margin-left: 2px;
+        }
+
+        .report-field input,
+        .report-field textarea {
+            width: 100%;
+            padding: 11px 13px;
+            font-family: inherit;
+            font-size: 13.5px;
+            line-height: 1.55;
+            color: #f1f1f1;
+            background: rgba(255, 255, 255, 0.045);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 11px;
+            outline: none;
+            transition: border-color 0.22s ease, background 0.22s ease,
+                        box-shadow 0.22s ease;
+            resize: vertical;
+        }
+
+        .report-field input::placeholder,
+        .report-field textarea::placeholder {
+            color: #6f6f82;
+        }
+
+        .report-field input:focus,
+        .report-field textarea:focus {
+            border-color: rgba(167, 139, 250, 0.7);
+            background: rgba(124, 58, 237, 0.1);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+        }
+
+        .report-field textarea {
+            min-height: 118px;
+            max-height: 260px;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .report-actions button {
+            flex: 1;
+            padding: 12px 18px;
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            border-radius: 999px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.22s ease, box-shadow 0.22s ease,
+                        filter 0.22s ease, background 0.22s ease,
+                        border-color 0.22s ease, color 0.22s ease;
+        }
+
+        .btn-cancel {
+            flex: 0 0 auto !important;
+            min-width: 96px;
+            color: #c7c7d2;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .btn-cancel:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.22);
+        }
+
+        .btn-submit {
+            color: #ffffff;
+            background: linear-gradient(135deg, #2e1065 0%, #6d28d9 50%, #a78bfa 100%);
+            border: 1px solid rgba(196, 181, 253, 0.45);
+            box-shadow: 0 6px 22px rgba(109, 40, 217, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.65),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-submit:active:not(:disabled) {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            filter: grayscale(0.3);
+        }
+
+        /* Pesan sukses */
+        .report-success {
+            text-align: center;
+            padding: 12px 4px 6px;
+            animation: fadeUp 0.45s ease both;
+        }
+
+        .report-success-icon {
+            width: 66px;
+            height: 66px;
+            margin: 0 auto 16px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.35) 0%, rgba(124, 58, 237, 0.05) 70%);
+            border: 1.5px solid rgba(167, 139, 250, 0.5);
+            box-shadow: 0 0 32px rgba(124, 58, 237, 0.5),
+                        inset 0 0 18px rgba(167, 139, 250, 0.25);
+        }
+
+        .report-success-icon svg {
+            color: #c4b5fd;
+            filter: drop-shadow(0 0 8px rgba(196, 181, 253, 0.9));
+        }
+
+        .report-success h3 {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .report-success p {
+            font-size: 13.5px;
+            line-height: 1.7;
+            color: #b0b0be;
+            margin-bottom: 22px;
+        }
+
+        .report-success .btn-done {
+            display: inline-block;
+            padding: 11px 30px;
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #a78bfa 100%);
+            border: 1px solid rgba(196, 181, 253, 0.45);
+            border-radius: 999px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 6px 22px rgba(109, 40, 217, 0.45);
+            transition: transform 0.22s ease, filter 0.22s ease,
+                        box-shadow 0.22s ease;
+        }
+
+        .report-success .btn-done:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 10px 28px rgba(139, 92, 246, 0.6);
+        }
+
+        .report-success .btn-done:active {
+            transform: scale(0.97);
+        }
+
+        /* ===== RESPONSIF ===== */
+        @media (max-width: 600px) {
+            .navbar {
+                height: 68px;
+                padding: 0 16px;
+            }
+            .navbar .brand-logo {
+                height: 42px;
+                max-width: 130px;
+            }
+            .nav-right {
+                gap: 7px;
+            }
+            .btn-about {
+                padding: 9px 14px;
+                font-size: 12.5px;
+                gap: 6px;
+            }
+            .btn-about svg {
+                width: 14px;
+                height: 14px;
+            }
+            .btn-report {
+                padding: 8px 13px;
+                font-size: 12px;
+                gap: 6px;
+            }
+            .btn-report svg {
+                width: 14px;
+                height: 14px;
+            }
+            .loader-screen img {
+                width: 170px;
+            }
+            .bottom-image {
+                width: 200px;
+            }
+            .image-section {
+                padding: 8px 16px 24px;
+                margin-top: -12px;
+            }
+            .content {
+                padding: 8px 16px 40px;
+            }
+            .about-header {
+                padding: 12px 16px;
+            }
+            .about-brand {
+                height: 30px;
+            }
+            .about-inner {
+                padding: 26px 18px 70px;
+            }
+            .about-section {
+                margin-top: 36px;
+            }
+            .info-item .label {
+                min-width: 100%;
+                font-size: 12.5px;
+            }
+            .info-item .value {
+                font-size: 13.5px;
+            }
+            .pillar,
+            .roadmap li {
+                padding: 15px 16px;
+            }
+            .report-content {
+                padding: 22px 18px 20px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .btn-about span,
+            .btn-report span {
+                display: none;
+            }
+            .btn-about,
+            .btn-report {
+                padding: 9px;
+                width: 38px;
+                height: 38px;
+                justify-content: center;
+                gap: 0;
+            }
+            .btn-about svg,
+            .btn-report svg {
+                width: 16px;
+                height: 16px;
+            }
+            .navbar .brand-logo {
+                height: 40px;
+                max-width: 120px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="loading">
+
+    <!-- ===== LOADING SCREEN ===== -->
+    <div class="loader-screen" id="loaderScreen">
+        <img src="scodiplay.png" alt="SCODI PLAY APPS">
+    </div>
+
+    <!-- BILAH NAVIGASI ATAS -->
+    <nav class="navbar">
+        <img src="scodiplay.png" alt="SCODI PLAY APPS" class="brand-logo">
+
+        <div class="nav-right">
+            <!-- Tombol Laporkan Masalah -->
+            <button class="btn-report" id="btnReport" type="button" aria-label="Laporkan Masalah">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 21V4"></path>
+                    <path d="M4 4h13l-3 4.5L17 13H4"></path>
+                </svg>
+                <span>Laporkan Masalah</span>
+            </button>
+
+            <!-- Tombol Tentang Kami -->
+            <button class="btn-about" id="btnAbout" type="button" aria-label="Buka halaman Tentang Kami">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <line x1="12" y1="11" x2="12" y2="16.5"></line>
+                    <circle cx="12" cy="7.8" r="0.9" fill="currentColor" stroke="none"></circle>
+                </svg>
+                <span>Tentang Kami</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== SLIDER BANNER ===== -->
+    <section class="slider-container" id="sliderContainer">
+        <div class="slider-track" id="sliderTrack">
+
+            <div class="slide">
+                <video
+                    id="bannerVideo"
+                    src="scodiplay apps.mp4"
+                    autoplay
+                    muted
+                    playsinline
+                    preload="auto"
+                    disablepictureinpicture
+                    disableremoteplayback
+                    controlslist="nodownload noplaybackrate noremoteplayback nofullscreen"
+                    oncontextmenu="return false;">
+                </video>
+            </div>
+
+            <div class="slide"><img src="UNDUH PRAKTIS DAN AMAN DI_20261026_223825_0000.png" alt="Banner 1"></div>
+            <div class="slide"><img src="UNDUH PRAKTIS DAN AMAN DI_20261026_223825_0002.png" alt="Banner 2"></div>
+            <div class="slide"><img src="UNDUH PRAKTIS DAN AMAN DI_20261026_223825_0001.png" alt="Banner 3"></div>
+            <div class="slide"><img src="UNDUH PRAKTIS DAN AMAN DI_20261026_223825_0003.png" alt="Banner 4"></div>
+            <div class="slide"><img src="UNDUH PRAKTIS DAN AMAN DI_20261026_223826_0004.png" alt="Banner 5"></div>
+
+        </div>
+    </section>
+
+    <!-- GAMBAR DI BAWAH BANNER -->
+    <section class="image-section">
+        <img src="Picsart_26-10-25_22-36-08-862.png" alt="SCODI PLAY" class="bottom-image">
+    </section>
+
+    <!-- KONTEN (siap diisi aplikasi nanti) -->
+    <main class="content">
+        <!-- Nanti aplikasi ditambahkan di sini -->
+    </main>
+
+    <!-- ============================================================
+         HALAMAN TENTANG KAMI
+         ============================================================ -->
+    <div class="about-page" id="aboutPage" role="region" aria-label="Tentang Kami" aria-hidden="true">
+        <div class="about-header">
+            <button class="btn-back" id="btnBack" type="button" aria-label="Kembali ke halaman utama">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                     stroke="currentColor" stroke-width="2.2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Kembali</span>
+            </button>
+            <img src="scodiplay.png" alt="SCODI PLAY APPS" class="about-brand">
+        </div>
+
+        <div class="about-inner">
+
+            <div class="about-eyebrow">Tentang Kami</div>
+
+            <h1 class="about-title">Profil Perusahaan: <span class="grad">Scodiplay</span></h1>
+
+            <p class="about-lead">
+                Scodiplay adalah studio pengembang independen (indie developer studio) dan rintisan
+                teknologi (micro-startup) yang berfokus pada rancang bangun perangkat lunak,
+                distribusi aplikasi, serta produksi konten digital.
+            </p>
+
+            <section class="about-section">
+                <h2 class="section-title">Identitas Perusahaan</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="label">Nama Entitas</div>
+                        <div class="value">Scodiplay (Scodiplay Studio / Scodiplay Apps)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Pendiri &amp; Pengembang Utama</div>
+                        <div class="value">Muhammad Caesar Fahrezy</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Bidang Usaha</div>
+                        <div class="value">Pengembangan Aplikasi Web dan Seluler, Distribusi Perangkat Lunak, serta Media Kreatif</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Identitas Visual</div>
+                        <div class="value">Nuansa futuristik bertema gelap (dark mode) dengan aksen warna ungu neon yang modern</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="about-section">
+                <h2 class="section-title">Pilar Produk dan Operasional</h2>
+                <div class="pillar-list">
+
+                    <article class="pillar">
+                        <h4>Scodiplay Apps (Platform Distribusi)</h4>
+                        <p>
+                            Proyek etalase aplikasi mandiri yang berfungsi layaknya toko aplikasi digital.
+                            Platform ini dirancang untuk memudahkan pengguna melihat katalog, membaca detail
+                            sistem, dan langsung mengunduh paket instalasi aplikasi (.apk) karya Scodiplay
+                            secara terpusat.
+                        </p>
+                    </article>
+
+                    <article class="pillar">
+                        <h4>Pengembangan Web &amp; Software</h4>
+                        <p>
+                            Pembuatan situs interaktif dan aplikasi fungsional berbasis frontend menggunakan
+                            HTML, CSS, dan JavaScript. Proses rekayasa perangkat lunak dijalankan secara
+                            fleksibel melalui mobile code editor seperti Acode maupun lingkungan kerja
+                            Visual Studio Code.
+                        </p>
+                    </article>
+
+                    <article class="pillar">
+                        <h4>Pemasaran &amp; Media Digital</h4>
+                        <p>
+                            Memanfaatkan kanal YouTube dan TikTok resmi Scodiplay sebagai sarana distribusi
+                            karya, pembentukan komunitas pengguna, dan publikasi proses pembuatan aplikasi
+                            secara terbuka (build in public).
+                        </p>
+                    </article>
+
+                    <article class="pillar">
+                        <h4>Alur Kerja Modern</h4>
+                        <p>
+                            Mengoptimalkan integrasi kecerdasan buatan (AI) dalam menyusun logika kode,
+                            pengujian antarmuka (UI/UX), hingga penanganan galat (debugging) guna menjaga
+                            efisiensi pengembangan mandiri.
+                        </p>
+                    </article>
+
+                </div>
+            </section>
+
+            <section class="about-section">
+                <h2 class="section-title">Peta Rencana Strategis</h2>
+                <ol class="roadmap">
+
+                    <li>
+                        <div class="rm-body">
+                            <h4>Penguatan Kapabilitas Teknis</h4>
+                            <p>
+                                Pendalaman kurikulum logika pemrograman, basis data, dan arsitektur backend
+                                secara formal melalui jurusan Rekayasa Perangkat Lunak (RPL).
+                            </p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="rm-body">
+                            <h4>Diversifikasi Portofolio</h4>
+                            <p>
+                                Perluasan katalog dari alat bantu produktivitas ke eksperimen interaktif
+                                berbasis game dan aplikasi utilitas sehari-hari.
+                            </p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="rm-body">
+                            <h4>Legalisasi dan Skalabilitas</h4>
+                            <p>
+                                Penyiapan legalitas usaha berbadan hukum resmi (seperti PT Perorangan) serta
+                                penerapan model monetisasi digital begitu memenuhi batas usia hukum 18 tahun.
+                            </p>
+                        </div>
+                    </li>
+
+                </ol>
+            </section>
+
+            <div class="about-footer">
+                &copy; 2026 <span>Scodiplay</span> &middot; Indie Developer Studio &amp; Micro-Startup
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================================
+         POPUP LAPORKAN MASALAH
+         ============================================================ -->
+    <div class="report-modal" id="reportModal" role="dialog" aria-modal="true"
+         aria-labelledby="reportTitle" aria-hidden="true">
+        <div class="report-overlay" id="reportOverlay"></div>
+
+        <div class="report-content">
+
+            <!-- FORM -->
+            <div id="reportFormWrap">
+                <div class="report-head">
+                    <div class="report-head-text">
+                        <h3 id="reportTitle">Laporkan Masalah</h3>
+                        <p>Ceritakan kendala yang kamu alami. Laporan akan langsung dikirim ke tim Scodiplay.</p>
+                    </div>
+                    <button class="report-close" id="reportClose" type="button" aria-label="Tutup">×</button>
+                </div>
+
+                <form class="report-form" id="reportForm" novalidate>
+                    <div class="report-field">
+                        <label for="reportName">Nama <span style="color:#9c9cae;font-weight:500;">(opsional)</span></label>
+                        <input type="text" id="reportName" name="name" placeholder="Nama kamu" autocomplete="name">
+                    </div>
+
+                    <div class="report-field">
+                        <label for="reportEmail">Email <span style="color:#9c9cae;font-weight:500;">(opsional, untuk balasan)</span></label>
+                        <input type="email" id="reportEmail" name="email" placeholder="email@kamu.com" autocomplete="email">
+                    </div>
+
+                    <div class="report-field">
+                        <label for="reportMessage">Laporan <span class="req">*</span></label>
+                        <textarea id="reportMessage" name="message"
+                                  placeholder="Tulis laporan masalah yang kamu alami di sini..."
+                                  required></textarea>
+                    </div>
+
+                    <div class="report-actions">
+                        <button type="button" class="btn-cancel" id="reportCancel">Batal</button>
+                        <button type="submit" class="btn-submit" id="reportSubmit">Kirim Laporan</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- SUKSES -->
+            <div class="report-success" id="reportSuccess" style="display:none;">
+                <div class="report-success-icon">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none"
+                         stroke="currentColor" stroke-width="2.6"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h3>Laporan mu masuk...!</h3>
+                <p>Terimakasih kami akan membalasnya</p>
+                <button type="button" class="btn-done" id="reportDone">Selesai</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        /* ============================================================
+           1. LOADING SCREEN
+           ============================================================ */
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                var loader = document.getElementById('loaderScreen');
+                if (loader) loader.remove();
+                document.body.classList.remove('loading');
+                startSlider();
+            }, 1800);
+        });
+
+        /* ============================================================
+           2. LOGIKA SLIDER OTOMATIS
+           ============================================================ */
+        const track = document.getElementById('sliderTrack');
+        const video = document.getElementById('bannerVideo');
+        const totalSlides = document.querySelectorAll('.slide').length;
+        let currentIndex = 0;
+        let slideTimeout;
+
+        function goToSlide(index) {
+            currentIndex = index;
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+            clearTimeout(slideTimeout);
+
+            if (currentIndex === 0) {
+                video.currentTime = 0;
+                video.play().catch(e => console.log("Video autoplay diblokir:", e));
+            } else {
+                video.pause();
+                slideTimeout = setTimeout(nextSlide, 5000);
+            }
+        }
+
+        function nextSlide() {
+            if (currentIndex < totalSlides - 1) {
+                goToSlide(currentIndex + 1);
+            } else {
+                goToSlide(0);
+            }
+        }
+
+        function startSlider() {
+            goToSlide(0);
+        }
+
+        video.addEventListener('ended', function () {
+            if (currentIndex === 0) {
+                nextSlide();
+            }
+        });
+
+        /* ============================================================
+           3. NAVIGASI HALAMAN TENTANG KAMI
+           ============================================================ */
+        const aboutPage = document.getElementById('aboutPage');
+        const btnAbout  = document.getElementById('btnAbout');
+        const btnBack   = document.getElementById('btnBack');
+        const HASH_ABOUT = '#tentang-kami';
+
+        function openAbout(pushHistory) {
+            aboutPage.classList.add('open');
+            aboutPage.setAttribute('aria-hidden', 'false');
+            aboutPage.scrollTop = 0;
+            document.body.classList.add('no-scroll');
+
+            if (pushHistory && location.hash !== HASH_ABOUT) {
+                history.pushState({ page: 'about' }, '', HASH_ABOUT);
+            }
+        }
+
+        function closeAbout(updateHistory) {
+            aboutPage.classList.remove('open');
+            aboutPage.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('no-scroll');
+
+            if (updateHistory && location.hash === HASH_ABOUT) {
+                history.replaceState(null, '', location.pathname + location.search);
+            }
+        }
+
+        btnAbout.addEventListener('click', function () {
+            openAbout(true);
+        });
+
+        btnBack.addEventListener('click', function () {
+            if (history.state && history.state.page === 'about') {
+                history.back();
+            } else {
+                closeAbout(true);
+            }
+        });
+
+        window.addEventListener('popstate', function () {
+            if (location.hash === HASH_ABOUT) {
+                openAbout(false);
+            } else {
+                closeAbout(false);
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && aboutPage.classList.contains('open')) {
+                if (history.state && history.state.page === 'about') {
+                    history.back();
+                } else {
+                    closeAbout(true);
+                }
+            }
+        });
+
+        if (location.hash === HASH_ABOUT) {
+            openAbout(false);
+        }
+
+        /* ============================================================
+           4. POPUP LAPORKAN MASALAH
+           ============================================================ */
+        const reportModal   = document.getElementById('reportModal');
+        const btnReport     = document.getElementById('btnReport');
+        const reportOverlay = document.getElementById('reportOverlay');
+        const reportClose   = document.getElementById('reportClose');
+        const reportCancel  = document.getElementById('reportCancel');
+        const reportDone    = document.getElementById('reportDone');
+        const reportFormWrap = document.getElementById('reportFormWrap');
+        const reportForm    = document.getElementById('reportForm');
+        const reportSuccess = document.getElementById('reportSuccess');
+        const reportSubmit  = document.getElementById('reportSubmit');
+        const reportMessage = document.getElementById('reportMessage');
+
+        // ⚠️ GANTI dengan email tujuan yang sudah diverifikasi di formsubmit.co
+        const REPORT_EMAIL = 'fahrezycaesar@gmail.com';
+        const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/' + REPORT_EMAIL;
+
+        function openReport() {
+            // Reset state form setiap kali dibuka
+            reportForm.reset();
+            reportFormWrap.style.display = 'block';
+            reportSuccess.style.display = 'none';
+            reportSubmit.disabled = false;
+            reportSubmit.textContent = 'Kirim Laporan';
+            reportMessage.style.borderColor = '';
+            reportMessage.style.boxShadow = '';
+
+            reportModal.classList.add('open');
+            reportModal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('no-scroll');
+
+            // Fokus ke textarea setelah animasi
+            setTimeout(function () { reportMessage.focus(); }, 340);
+        }
+
+        function closeReport() {
+            reportModal.classList.remove('open');
+            reportModal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('no-scroll');
+        }
+
+        btnReport.addEventListener('click', openReport);
+        reportOverlay.addEventListener('click', closeReport);
+        reportClose.addEventListener('click', closeReport);
+        reportCancel.addEventListener('click', closeReport);
+        reportDone.addEventListener('click', closeReport);
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && reportModal.classList.contains('open')) {
+                closeReport();
+            }
+        });
+
+        // Kirim laporan via AJAX (tanpa membuka aplikasi email)
+        reportForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const message = reportMessage.value.trim();
+            if (!message) {
+                reportMessage.style.borderColor = 'rgba(248, 113, 113, 0.8)';
+                reportMessage.style.boxShadow = '0 0 0 3px rgba(220, 38, 38, 0.18)';
+                reportMessage.focus();
+                return;
+            }
+
+            const name  = document.getElementById('reportName').value.trim() || '-';
+            const email = document.getElementById('reportEmail').value.trim() || '-';
+
+            reportSubmit.disabled = true;
+            reportSubmit.textContent = 'Mengirim...';
+
+            try {
+                const res = await fetch(FORMSUBMIT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        message: message,
+                        _subject: 'Laporan Masalah — Scodiplay Apps',
+                        _template: 'table',
+                        _captcha: 'false'
+                    })
+                });
+
+                // Apapun hasil response-nya (termasuk aktivasi pertama kali),
+                // laporan sudah dikirim ke endpoint.
+                reportFormWrap.style.display = 'none';
+                reportSuccess.style.display = 'block';
+            } catch (err) {
+                // Gagal jaringan
+                reportSubmit.disabled = false;
+                reportSubmit.textContent = 'Kirim Laporan';
+                alert('Gagal mengirim laporan. Periksa koneksi internet kamu lalu coba lagi.');
+            }
+        });
+
+        // Reset border merah saat user mengetik lagi
+        reportMessage.addEventListener('input', function () {
+            if (reportMessage.value.trim()) {
+                reportMessage.style.borderColor = '';
+                reportMessage.style.boxShadow = '';
+            }
+        });
+    </script>
+
+</body>
+</html>

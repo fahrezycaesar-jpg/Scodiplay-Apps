@@ -23,6 +23,7 @@
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
+            -webkit-tap-highlight-color: transparent; 
         }
 
         /* ===== LOADING SCREEN ===== */
@@ -51,7 +52,6 @@
             overflow: hidden;
         }
 
-        /* Latar belakang dekoratif halus (versi gelap) */
         body::before {
             content: "";
             position: fixed;
@@ -78,7 +78,7 @@
             pointer-events: none;
         }
 
-        /* ===== BILAH NAVIGASI ATAS (GELAP) ===== */
+        /* ===== NAVBAR ===== */
         .navbar {
             position: sticky;
             top: 0;
@@ -117,7 +117,6 @@
             flex-shrink: 0;
         }
 
-        /* ===== TOMBOL TENTANG KAMI (GRADASI UNGU TUA → PUTIH) ===== */
         .btn-about {
             position: relative;
             display: inline-flex;
@@ -179,7 +178,6 @@
             opacity: 0.95;
         }
 
-        /* ===== TOMBOL LAPORKAN MASALAH ===== */
         .btn-report {
             display: inline-flex;
             align-items: center;
@@ -218,7 +216,7 @@
             opacity: 0.95;
         }
 
-        /* ===== SLIDER BANNER (VIDEO & FOTO) ===== */
+        /* ===== SLIDER ===== */
         .slider-container {
             position: relative;
             width: 100%;
@@ -266,7 +264,6 @@
             z-index: 2;
         }
 
-        /* ===== GAMBAR DI BAWAH BANNER ===== */
         .image-section {
             display: flex;
             justify-content: center;
@@ -298,6 +295,335 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        /* ===== LABEL "APLIKASI" ===== */
+        .section-label {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+            margin-left: -28px;
+            padding-left: 28px;
+            position: relative;
+        }
+
+        .section-bar {
+            width: 5px;
+            height: 30px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, #c4b5fd 0%, #7c3aed 60%, #4c1d95 100%);
+            box-shadow: 0 0 16px rgba(124, 58, 237, 0.9),
+                        inset 0 0 6px rgba(255, 255, 255, 0.25);
+        }
+
+        .section-label h2 {
+            font-size: clamp(22px, 4.5vw, 30px);
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            line-height: 1.1;
+            background: linear-gradient(120deg, #ffffff 0%, #c4b5fd 40%, #a78bfa 75%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 24px rgba(124, 58, 237, 0.35);
+        }
+
+        /* ===== GRID APLIKASI (RATA KIRI, MUNCUL KE SAMPING) ===== */
+        .app-grid {
+            width: 100%;
+            display: flex;
+            flex-wrap: nowrap; 
+            gap: 12px;
+            justify-content: flex-start;
+            align-items: flex-start;
+            overflow-x: auto; 
+            padding-bottom: 15px; 
+            scrollbar-width: none; 
+            -webkit-overflow-scrolling: touch; 
+        }
+
+        .app-grid::-webkit-scrollbar {
+            display: none;
+        }
+
+        .app-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            padding: 8px 14px 8px 8px;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            text-align: left;
+            max-width: 100%;
+            flex-shrink: 0; 
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease;
+            -webkit-tap-highlight-color: transparent; 
+            outline: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        .app-card:active {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
+        .app-logo-wrapper {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(160deg, rgba(124, 58, 237, 0.15), rgba(255, 255, 255, 0.03));
+            border: 1px solid rgba(167, 139, 250, 0.25);
+            box-shadow: 0 4px 14px rgba(76, 29, 149, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        .app-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+            -webkit-touch-callout: none;
+        }
+
+        .app-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+            text-align: left;
+        }
+
+        .app-name {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            color: #f1f1f1;
+            line-height: 1.25;
+            text-align: left;
+            word-break: break-word;
+        }
+
+        .app-creator-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            justify-content: flex-start;
+        }
+
+        .verify-badge {
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 0 4px rgba(96, 165, 250, 0.6));
+        }
+
+        .app-creator {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            line-height: 1.35;
+            color: #60a5fa;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.25);
+            text-align: left;
+            word-break: break-word;
+        }
+
+        /* ============================================================
+           HALAMAN DETAIL APLIKASI (OVERLAY)
+           ============================================================ */
+        .app-detail-page {
+            position: fixed;
+            inset: 0;
+            z-index: 550;
+            overflow-y: auto;
+            background: #0b0b0d;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(100%); 
+            transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+        }
+
+        .app-detail-page.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .detail-header {
+            position: sticky;
+            top: 0;
+            z-index: 6;
+            display: flex;
+            align-items: center;
+            padding: 14px 24px;
+            background: rgba(11, 11, 13, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .detail-content {
+            padding: 30px 24px;
+            max-width: 880px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .detail-app-info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        .detail-app-logo {
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+            border-radius: 20px;
+            object-fit: cover;
+            background: linear-gradient(160deg, rgba(124, 58, 237, 0.15), rgba(255, 255, 255, 0.03));
+            border: 1px solid rgba(167, 139, 250, 0.25);
+            box-shadow: 0 4px 14px rgba(76, 29, 149, 0.3);
+        }
+
+        .detail-app-text {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .detail-app-name {
+            font-size: 24px;
+            font-weight: 800;
+            color: #f1f1f1;
+            line-height: 1.2;
+        }
+
+        .detail-creator-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .detail-app-creator {
+            font-size: 14px;
+            font-weight: 500;
+            color: #60a5fa;
+        }
+
+        .detail-verify-badge {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+
+        .btn-install {
+            width: 100%;
+            padding: 18px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #a78bfa 100%);
+            border: 1px solid rgba(196, 181, 253, 0.45);
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 6px 22px rgba(109, 40, 217, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: transform 0.22s ease, filter 0.22s ease, box-shadow 0.22s ease;
+            -webkit-tap-highlight-color: transparent;
+            text-align: center;
+        }
+
+        .btn-install:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.65),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-install:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* ===== STATE TOMBOL INSTAL ===== */
+        .btn-install:disabled {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-install.installing {
+            background: linear-gradient(135deg, #312e81 0%, #4c1d95 60%, #7c3aed 100%);
+            border-color: rgba(167, 139, 250, 0.55);
+            animation: installPulse 1.4s ease-in-out infinite;
+        }
+
+        .btn-install.installing::after {
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-left: 10px;
+            vertical-align: -2px;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: installSpin 0.75s linear infinite;
+        }
+
+        .btn-install.done {
+            background: linear-gradient(135deg, #064e3b 0%, #059669 55%, #34d399 100%);
+            border-color: rgba(110, 231, 183, 0.55);
+            box-shadow: 0 6px 22px rgba(16, 185, 129, 0.55),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            animation: donePop 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+        }
+
+        .btn-install.error {
+            background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 60%, #f87171 100%);
+            border-color: rgba(252, 165, 165, 0.55);
+            box-shadow: 0 6px 22px rgba(220, 38, 38, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes installSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes installPulse {
+            0%, 100% { box-shadow: 0 6px 22px rgba(109, 40, 217, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+            50%      { box-shadow: 0 8px 30px rgba(139, 92, 246, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+        }
+
+        @keyframes donePop {
+            0%   { transform: scale(0.94); }
+            60%  { transform: scale(1.03); }
+            100% { transform: scale(1); }
         }
 
         /* ============================================================
@@ -838,7 +1164,6 @@
             filter: grayscale(0.3);
         }
 
-        /* Pesan sukses */
         .report-success {
             text-align: center;
             padding: 12px 4px 6px;
@@ -906,6 +1231,156 @@
             transform: scale(0.97);
         }
 
+        /* ============================================================
+           BOTTOM SHEET — APLIKASI PIHAK KETIGA
+           ============================================================ */
+        .bs-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 620;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s;
+        }
+
+        .bs-modal.open {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .bs-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .bs-sheet {
+            position: relative;
+            width: 100%;
+            max-width: 560px;
+            max-height: 88vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding: 14px 22px calc(26px + env(safe-area-inset-bottom, 0px));
+            background:
+                radial-gradient(circle at 100% 0%, rgba(124, 58, 237, 0.22) 0%, transparent 55%),
+                linear-gradient(160deg, #17171d 0%, #101014 100%);
+            border-radius: 24px 24px 0 0;
+            border: 1px solid rgba(167, 139, 250, 0.28);
+            border-bottom: none;
+            box-shadow: 0 -24px 70px rgba(0, 0, 0, 0.75),
+                        0 0 50px rgba(124, 58, 237, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            transform: translateY(100%);
+            transition: transform 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.05);
+        }
+
+        .bs-sheet::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bs-modal.open .bs-sheet {
+            transform: translateY(0);
+        }
+
+        .bs-handle {
+            width: 44px;
+            height: 5px;
+            margin: 0 auto 18px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .bs-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .bs-icon-wrap {
+            width: 62px;
+            height: 62px;
+            margin: 0 auto 4px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            color: #fbbf24;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.22) 0%, rgba(251, 191, 36, 0.04) 70%);
+            border: 1.5px solid rgba(251, 191, 36, 0.4);
+            box-shadow: 0 0 26px rgba(251, 191, 36, 0.3),
+                        inset 0 0 14px rgba(251, 191, 36, 0.15);
+        }
+
+        .bs-icon-wrap svg {
+            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.7));
+        }
+
+        .bs-title {
+            font-size: 17.5px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+
+        .bs-desc {
+            font-size: 13.5px;
+            line-height: 1.7;
+            color: #b0b0be;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .bs-desc p {
+            margin: 0 0 10px;
+        }
+
+        .bs-desc p:last-child {
+            margin-bottom: 14px;
+        }
+
+        .bs-desc strong {
+            color: #fbbf24;
+            font-weight: 700;
+        }
+
+        .bs-btn {
+            width: 100%;
+            padding: 14px 22px;
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #a78bfa 100%);
+            border: 1px solid rgba(196, 181, 253, 0.45);
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 6px 22px rgba(109, 40, 217, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: transform 0.22s ease, filter 0.22s ease, box-shadow 0.22s ease;
+            -webkit-tap-highlight-color: transparent;
+            flex-shrink: 0;
+        }
+
+        .bs-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.6),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .bs-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
         /* ===== RESPONSIF ===== */
         @media (max-width: 600px) {
             .navbar {
@@ -916,73 +1391,74 @@
                 height: 42px;
                 max-width: 130px;
             }
-            .nav-right {
-                gap: 7px;
-            }
+            .nav-right { gap: 7px; }
             .btn-about {
                 padding: 9px 14px;
                 font-size: 12.5px;
                 gap: 6px;
             }
-            .btn-about svg {
-                width: 14px;
-                height: 14px;
-            }
+            .btn-about svg { width: 14px; height: 14px; }
             .btn-report {
                 padding: 8px 13px;
                 font-size: 12px;
                 gap: 6px;
             }
-            .btn-report svg {
-                width: 14px;
-                height: 14px;
-            }
-            .loader-screen img {
-                width: 170px;
-            }
-            .bottom-image {
-                width: 200px;
-            }
+            .btn-report svg { width: 14px; height: 14px; }
+            .loader-screen img { width: 170px; }
+            .bottom-image { width: 200px; }
             .image-section {
                 padding: 8px 16px 24px;
                 margin-top: -12px;
             }
-            .content {
-                padding: 8px 16px 40px;
+            .content { padding: 8px 16px 40px; }
+            .section-label {
+                margin-left: -16px;
+                padding-left: 16px;
+                margin-bottom: 16px;
             }
-            .about-header {
-                padding: 12px 16px;
+            .section-bar { width: 4px; height: 26px; }
+
+            .app-card {
+                padding: 7px 12px 7px 7px;
+                gap: 10px;
+                border-radius: 14px;
             }
-            .about-brand {
-                height: 30px;
+            .app-logo-wrapper {
+                width: 56px;
+                height: 56px;
+                border-radius: 12px;
             }
-            .about-inner {
-                padding: 26px 18px 70px;
-            }
-            .about-section {
-                margin-top: 36px;
-            }
+            .app-name { font-size: 13px; }
+            .app-creator { font-size: 10.5px; }
+            .verify-badge { width: 12px; height: 12px; }
+
+            .about-header { padding: 12px 16px; }
+            .about-brand { height: 30px; }
+            .about-inner { padding: 26px 18px 70px; }
+            .about-section { margin-top: 36px; }
             .info-item .label {
                 min-width: 100%;
                 font-size: 12.5px;
             }
-            .info-item .value {
-                font-size: 13.5px;
-            }
-            .pillar,
-            .roadmap li {
-                padding: 15px 16px;
-            }
-            .report-content {
-                padding: 22px 18px 20px;
-            }
+            .info-item .value { font-size: 13.5px; }
+            .pillar, .roadmap li { padding: 15px 16px; }
+            .report-content { padding: 22px 18px 20px; }
+
+            .detail-content { padding: 20px 16px; }
+            .detail-app-info { padding: 16px; gap: 14px; }
+            .detail-app-logo { width: 70px; height: 70px; border-radius: 16px; }
+            .detail-app-name { font-size: 20px; }
+            .detail-app-creator { font-size: 13px; }
+            .btn-install { padding: 16px; font-size: 15px; }
+
+            .bs-sheet { padding: 14px 18px calc(22px + env(safe-area-inset-bottom, 0px)); }
+            .bs-title { font-size: 16px; }
+            .bs-desc { font-size: 13px; }
         }
 
         @media (max-width: 420px) {
             .btn-about span,
-            .btn-report span {
-                display: none;
-            }
+            .btn-report span { display: none; }
             .btn-about,
             .btn-report {
                 padding: 9px;
@@ -992,14 +1468,12 @@
                 gap: 0;
             }
             .btn-about svg,
-            .btn-report svg {
-                width: 16px;
-                height: 16px;
-            }
-            .navbar .brand-logo {
-                height: 40px;
-                max-width: 120px;
-            }
+            .btn-report svg { width: 16px; height: 16px; }
+            .navbar .brand-logo { height: 40px; max-width: 120px; }
+            .app-logo-wrapper { width: 52px; height: 52px; }
+            .app-name { font-size: 12.5px; }
+            .app-creator { font-size: 10px; }
+            .verify-badge { width: 11px; height: 11px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1012,17 +1486,14 @@
 </head>
 <body class="loading">
 
-    <!-- ===== LOADING SCREEN ===== -->
     <div class="loader-screen" id="loaderScreen">
         <img src="scodiplay.png" alt="SCODI PLAY APPS">
     </div>
 
-    <!-- BILAH NAVIGASI ATAS -->
     <nav class="navbar">
         <img src="scodiplay.png" alt="SCODI PLAY APPS" class="brand-logo">
 
         <div class="nav-right">
-            <!-- Tombol Laporkan Masalah -->
             <button class="btn-report" id="btnReport" type="button" aria-label="Laporkan Masalah">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
                      stroke="currentColor" stroke-width="2"
@@ -1033,7 +1504,6 @@
                 <span>Laporkan Masalah</span>
             </button>
 
-            <!-- Tombol Tentang Kami -->
             <button class="btn-about" id="btnAbout" type="button" aria-label="Buka halaman Tentang Kami">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
                      stroke="currentColor" stroke-width="2"
@@ -1047,7 +1517,6 @@
         </div>
     </nav>
 
-    <!-- ===== SLIDER BANNER ===== -->
     <section class="slider-container" id="sliderContainer">
         <div class="slider-track" id="sliderTrack">
 
@@ -1075,15 +1544,103 @@
         </div>
     </section>
 
-    <!-- GAMBAR DI BAWAH BANNER -->
     <section class="image-section">
         <img src="Picsart_26-10-25_22-36-08-862.png" alt="SCODI PLAY" class="bottom-image">
     </section>
 
-    <!-- KONTEN (siap diisi aplikasi nanti) -->
     <main class="content">
-        <!-- Nanti aplikasi ditambahkan di sini -->
+
+        <div class="section-label" aria-label="Bagian Aplikasi">
+            <span class="section-bar" aria-hidden="true"></span>
+            <h2>Aplikasi</h2>
+        </div>
+
+        <div class="app-grid">
+
+            <!-- ===== KARTU APLIKASI 1 ===== -->
+            <article class="app-card" data-apk="basic_script_guide (1).apk">
+                <div class="app-logo-wrapper" oncontextmenu="return false;">
+                    <img
+                        src="basic-script-guide.png"
+                        alt="Basic Script Guide"
+                        class="app-logo"
+                        draggable="false"
+                        oncontextmenu="return false;">
+                </div>
+
+                <div class="app-info">
+                    <h3 class="app-name">Basic Script Guide</h3>
+                    
+                    <div class="app-creator-row">
+                        <p class="app-creator">Komunitas uni script</p>
+                        <img
+                            src="verifikasi.png"
+                            alt="Terverifikasi"
+                            class="verify-badge"
+                            draggable="false"
+                            onerror="this.style.display='none';">
+                    </div>
+                </div>
+            </article>
+
+            <!-- ===== KARTU APLIKASI 2 ===== -->
+            <article class="app-card" data-apk="kalkulator.apk">
+                <div class="app-logo-wrapper" oncontextmenu="return false;">
+                    <img
+                        src="kalkulator.png"
+                        alt="kalkulator pintar"
+                        class="app-logo"
+                        draggable="false"
+                        oncontextmenu="return false;">
+                </div>
+
+                <div class="app-info">
+                    <h3 class="app-name">kalkulator pintar</h3>
+                    
+                    <div class="app-creator-row">
+                        <p class="app-creator">Scodiplay</p>
+                        <img
+                            src="centangbiru.png"
+                            alt="Terverifikasi"
+                            class="verify-badge"
+                            draggable="false"
+                            onerror="this.style.display='none';">
+                    </div>
+                </div>
+            </article>
+        </div>
     </main>
+
+    <!-- ============================================================
+         HALAMAN DETAIL APLIKASI
+         ============================================================ -->
+    <div class="app-detail-page" id="appDetailPage">
+        <div class="detail-header">
+            <button class="btn-back" id="btnBackDetail" type="button" aria-label="Kembali ke halaman utama">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                     stroke="currentColor" stroke-width="2.2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                <span>Kembali</span>
+            </button>
+        </div>
+        
+        <div class="detail-content">
+            <div class="detail-app-info">
+                <img src="" alt="Logo" class="detail-app-logo" id="detailLogo">
+                <div class="detail-app-text">
+                    <h1 class="detail-app-name" id="detailName">Nama Aplikasi</h1>
+                    <div class="detail-creator-row">
+                        <span class="detail-app-creator" id="detailCreator">Pengembang</span>
+                        <img src="" alt="Terverifikasi" class="detail-verify-badge" id="detailBadge" style="display: none;" onerror="this.style.display='none';">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-install" id="btnInstall">Instal Aplikasi</button>
+        </div>
+    </div>
 
     <!-- ============================================================
          HALAMAN TENTANG KAMI
@@ -1233,7 +1790,6 @@
 
         <div class="report-content">
 
-            <!-- FORM -->
             <div id="reportFormWrap">
                 <div class="report-head">
                     <div class="report-head-text">
@@ -1268,7 +1824,6 @@
                 </form>
             </div>
 
-            <!-- SUKSES -->
             <div class="report-success" id="reportSuccess" style="display:none;">
                 <div class="report-success-icon">
                     <svg viewBox="0 0 24 24" width="34" height="34" fill="none"
@@ -1282,6 +1837,52 @@
                 <button type="button" class="btn-done" id="reportDone">Selesai</button>
             </div>
 
+        </div>
+    </div>
+
+    <!-- ============================================================
+         BOTTOM SHEET — APLIKASI PIHAK KETIGA
+         ============================================================ -->
+    <div class="bs-modal" id="bsModal" aria-hidden="true">
+        <div class="bs-overlay" id="bsOverlay"></div>
+        <div class="bs-sheet" role="dialog" aria-modal="true" aria-labelledby="bsTitle">
+            <div class="bs-handle"></div>
+            <div class="bs-body">
+                <div class="bs-icon-wrap">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none"
+                         stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+
+                <h3 class="bs-title" id="bsTitle">Aplikasi Pihak Ketiga</h3>
+
+                <div class="bs-desc">
+                    <p>
+                        Aplikasi ini <strong>tidak di buat oleh pihak scodiplay™</strong>.
+                        Jika ada kendala, silahkan hubungi developer yang berkaitan — baik melalui
+                        fitur laporan atau media sosial developer!
+                    </p>
+                    <p>
+                        Aplikasi ini <strong>aman untuk di gunakan</strong>. Seluruh aplikasi yang
+                        di rilis di sini sudah dilewati verifikasi keamanan, termasuk aplikasi
+                        yang di buat scodiplay™. Aplikasi yang bukan di buat oleh scodiplay
+                        mungkin memerlukan login atau langganan.
+                    </p>
+                    <p>
+                        Pastikan juga jika anda ingin menginstal aplikasi resmi Scodiplay, nama
+                        <strong>Scodiplay</strong> sudah terdapat verifikasi yang berbentuk
+                        (gambar verifikasi ukuran kecil). Selain itu, pihak yang mengatasnamakan
+                        Scodiplay tanpa tanda verifikasi adalah <strong>palsu</strong>.
+                        Hati-hati! Jika menemukan, harap laporkan!
+                    </p>
+                </div>
+
+                <button type="button" class="bs-btn" id="bsOk">Mengerti</button>
+            </div>
         </div>
     </div>
 
@@ -1299,7 +1900,7 @@
         });
 
         /* ============================================================
-           2. LOGIKA SLIDER OTOMATIS
+           2. SLIDER
            ============================================================ */
         const track = document.getElementById('sliderTrack');
         const video = document.getElementById('bannerVideo');
@@ -1341,7 +1942,161 @@
         });
 
         /* ============================================================
-           3. NAVIGASI HALAMAN TENTANG KAMI
+           3. HALAMAN DETAIL APLIKASI (LOGIKA KLIK KARTU)
+           ============================================================ */
+        const appCards = document.querySelectorAll('.app-card');
+        const appDetailPage = document.getElementById('appDetailPage');
+        const btnBackDetail = document.getElementById('btnBackDetail');
+        const btnInstall = document.getElementById('btnInstall');
+
+        const detailLogo = document.getElementById('detailLogo');
+        const detailName = document.getElementById('detailName');
+        const detailCreator = document.getElementById('detailCreator');
+        const detailBadge = document.getElementById('detailBadge');
+
+        /* --- Bottom Sheet Peringatan Aplikasi Pihak Ketiga --- */
+        const bsModal   = document.getElementById('bsModal');
+        const bsOverlay = document.getElementById('bsOverlay');
+        const bsOk      = document.getElementById('bsOk');
+
+        function openVerificationSheet() {
+            bsModal.classList.add('open');
+            bsModal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeVerificationSheet() {
+            bsModal.classList.remove('open');
+            bsModal.setAttribute('aria-hidden', 'true');
+        }
+
+        bsOverlay.addEventListener('click', closeVerificationSheet);
+        bsOk.addEventListener('click', closeVerificationSheet);
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && bsModal.classList.contains('open')) {
+                closeVerificationSheet();
+            }
+        });
+
+        /* --- Simpan file APK yang sedang aktif --- */
+        let currentApkFile = '';
+
+        function resetInstallButton() {
+            btnInstall.disabled = false;
+            btnInstall.classList.remove('installing', 'done', 'error');
+            btnInstall.textContent = 'Instal Aplikasi';
+        }
+
+        /* --- Klik kartu aplikasi --- */
+        appCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const logo    = card.querySelector('.app-logo').src;
+                const name    = card.querySelector('.app-name').innerText;
+                const creator = card.querySelector('.app-creator').innerText;
+                const badge   = card.querySelector('.verify-badge');
+                const apkFile = card.dataset.apk || '';
+
+                const hasVerification = badge && badge.src && badge.style.display !== 'none';
+
+                detailLogo.src = logo;
+                detailName.innerText = name;
+                detailCreator.innerText = creator;
+                currentApkFile = apkFile;
+
+                if (hasVerification) {
+                    detailBadge.src = badge.src;
+                    detailBadge.style.display = 'block';
+                } else {
+                    detailBadge.removeAttribute('src');
+                    detailBadge.style.display = 'none';
+                }
+
+                // Reset tombol instal setiap kali buka detail
+                resetInstallButton();
+
+                // Buka halaman detail
+                appDetailPage.classList.add('open');
+                appDetailPage.scrollTop = 0;
+                document.body.classList.add('no-scroll');
+
+                // Auto tampilkan bottom sheet jika tanpa verifikasi
+                if (!hasVerification) {
+                    setTimeout(openVerificationSheet, 380);
+                } else {
+                    closeVerificationSheet();
+                }
+            });
+        });
+
+        // Tombol kembali di halaman detail
+        btnBackDetail.addEventListener('click', () => {
+            appDetailPage.classList.remove('open');
+            document.body.classList.remove('no-scroll');
+            closeVerificationSheet();
+            resetInstallButton();
+        });
+
+        /* ============================================================
+           4. LOGIKA TOMBOL INSTAL APLIKASI
+           ============================================================ */
+        btnInstall.addEventListener('click', async function () {
+            if (!currentApkFile) {
+                alert('File APK belum tersedia.');
+                return;
+            }
+
+            // --- 1. Ubah teks jadi "Lagi menginstal..." ---
+            btnInstall.disabled = true;
+            btnInstall.classList.remove('done', 'error');
+            btnInstall.classList.add('installing');
+            btnInstall.textContent = 'Lagi menginstal';
+
+            try {
+                // --- 2. Unduh file APK dari server (fetch + blob) ---
+                const response = await fetch(currentApkFile, { cache: 'no-store' });
+
+                if (!response.ok) {
+                    throw new Error('File tidak ditemukan (HTTP ' + response.status + ')');
+                }
+
+                const blob = await response.blob();
+
+                // --- 3. Trigger unduhan ke perangkat pengguna ---
+                const objectUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = objectUrl;
+                link.download = currentApkFile.split('/').pop();
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+
+                // Bersihkan object URL setelah beberapa saat
+                setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
+
+                // --- 4. Unduhan selesai → ubah teks tombol ---
+                btnInstall.classList.remove('installing');
+                btnInstall.classList.add('done');
+                btnInstall.textContent = 'Proses instal sudah selesai';
+
+            } catch (err) {
+                console.error('Gagal mengunduh APK:', err);
+
+                btnInstall.classList.remove('installing');
+                btnInstall.classList.add('error');
+                btnInstall.textContent = 'Gagal — Coba lagi';
+                btnInstall.disabled = false;
+
+                // Kembalikan ke teks normal setelah 3 detik
+                setTimeout(() => {
+                    if (btnInstall.classList.contains('error')) {
+                        resetInstallButton();
+                    }
+                }, 3000);
+            }
+        });
+
+        /* ============================================================
+           5. NAVIGASI TENTANG KAMI
            ============================================================ */
         const aboutPage = document.getElementById('aboutPage');
         const btnAbout  = document.getElementById('btnAbout');
@@ -1404,26 +2159,24 @@
         }
 
         /* ============================================================
-           4. POPUP LAPORKAN MASALAH
+           6. POPUP LAPORKAN MASALAH
            ============================================================ */
-        const reportModal   = document.getElementById('reportModal');
-        const btnReport     = document.getElementById('btnReport');
-        const reportOverlay = document.getElementById('reportOverlay');
-        const reportClose   = document.getElementById('reportClose');
-        const reportCancel  = document.getElementById('reportCancel');
-        const reportDone    = document.getElementById('reportDone');
+        const reportModal    = document.getElementById('reportModal');
+        const btnReport      = document.getElementById('btnReport');
+        const reportOverlay  = document.getElementById('reportOverlay');
+        const reportClose    = document.getElementById('reportClose');
+        const reportCancel   = document.getElementById('reportCancel');
+        const reportDone     = document.getElementById('reportDone');
         const reportFormWrap = document.getElementById('reportFormWrap');
-        const reportForm    = document.getElementById('reportForm');
-        const reportSuccess = document.getElementById('reportSuccess');
-        const reportSubmit  = document.getElementById('reportSubmit');
-        const reportMessage = document.getElementById('reportMessage');
+        const reportForm     = document.getElementById('reportForm');
+        const reportSuccess  = document.getElementById('reportSuccess');
+        const reportSubmit   = document.getElementById('reportSubmit');
+        const reportMessage  = document.getElementById('reportMessage');
 
-        // ⚠️ GANTI dengan email tujuan yang sudah diverifikasi di formsubmit.co
         const REPORT_EMAIL = 'fahrezycaesar@gmail.com';
         const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/' + REPORT_EMAIL;
 
         function openReport() {
-            // Reset state form setiap kali dibuka
             reportForm.reset();
             reportFormWrap.style.display = 'block';
             reportSuccess.style.display = 'none';
@@ -1436,7 +2189,6 @@
             reportModal.setAttribute('aria-hidden', 'false');
             document.body.classList.add('no-scroll');
 
-            // Fokus ke textarea setelah animasi
             setTimeout(function () { reportMessage.focus(); }, 340);
         }
 
@@ -1458,7 +2210,6 @@
             }
         });
 
-        // Kirim laporan via AJAX (tanpa membuka aplikasi email)
         reportForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -1477,7 +2228,7 @@
             reportSubmit.textContent = 'Mengirim...';
 
             try {
-                const res = await fetch(FORMSUBMIT_URL, {
+                await fetch(FORMSUBMIT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1493,19 +2244,15 @@
                     })
                 });
 
-                // Apapun hasil response-nya (termasuk aktivasi pertama kali),
-                // laporan sudah dikirim ke endpoint.
                 reportFormWrap.style.display = 'none';
                 reportSuccess.style.display = 'block';
             } catch (err) {
-                // Gagal jaringan
                 reportSubmit.disabled = false;
                 reportSubmit.textContent = 'Kirim Laporan';
                 alert('Gagal mengirim laporan. Periksa koneksi internet kamu lalu coba lagi.');
             }
         });
 
-        // Reset border merah saat user mengetik lagi
         reportMessage.addEventListener('input', function () {
             if (reportMessage.value.trim()) {
                 reportMessage.style.borderColor = '';

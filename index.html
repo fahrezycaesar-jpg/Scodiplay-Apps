@@ -35,13 +35,39 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
+            overflow: hidden;
+            transition: opacity 0.6s ease;
         }
 
-        .loader-screen img {
-            width: 220px;
-            max-width: 60%;
-            height: auto;
+        .loader-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Background: video yang SAMA, di-cover full layar (19.6:9), lalu di-blur */
+        .loader-bg-video {
+            position: absolute;
+            top: -30px;
+            left: -30px;
+            width: calc(100% + 60px);
+            height: calc(100% + 60px);
+            object-fit: cover;
+            filter: blur(30px) brightness(0.45) saturate(1.4);
+            z-index: 0;
+            pointer-events: none;
+            transform: scale(1.06);
+        }
+
+        /* Video utama: 16:9 di tengah, tidak blur */
+        .loader-main-video {
+            position: relative;
+            width: 100%;
+            max-width: 100vw;
+            aspect-ratio: 16 / 9;
             object-fit: contain;
+            z-index: 1;
+            display: block;
+            background: transparent;
         }
 
         body.loading {
@@ -331,7 +357,7 @@
             text-shadow: 0 0 24px rgba(124, 58, 237, 0.35);
         }
 
-        /* ===== GRID APLIKASI (RATA KIRI, MUNCUL KE SAMPING) ===== */
+        /* ===== GRID APLIKASI ===== */
         .app-grid {
             width: 100%;
             display: flex;
@@ -447,7 +473,7 @@
         }
 
         /* ============================================================
-           HALAMAN DETAIL APLIKASI (OVERLAY)
+           HALAMAN DETAIL APLIKASI
            ============================================================ */
         .app-detail-page {
             position: fixed;
@@ -571,7 +597,6 @@
             transform: translateY(0) scale(0.98);
         }
 
-        /* ===== STATE TOMBOL INSTAL ===== */
         .btn-install:disabled {
             cursor: not-allowed;
             pointer-events: none;
@@ -1404,7 +1429,6 @@
                 gap: 6px;
             }
             .btn-report svg { width: 14px; height: 14px; }
-            .loader-screen img { width: 170px; }
             .bottom-image { width: 200px; }
             .image-section {
                 padding: 8px 16px 24px;
@@ -1486,8 +1510,20 @@
 </head>
 <body class="loading">
 
+    <!-- ===== LOADING SCREEN ===== -->
+    <!-- Background (blur, full screen 19.6:9) & Main (16:9 di tengah) pakai video YANG SAMA -->
     <div class="loader-screen" id="loaderScreen">
-        <img src="scodiplay.png" alt="SCODI PLAY APPS">
+        <video class="loader-bg-video" id="loaderBgVideo" src="lv_0_20261118073351.mp4"
+               autoplay muted playsinline preload="auto" aria-hidden="true"
+               disablepictureinpicture disableremoteplayback
+               controlslist="nodownload noplaybackrate noremoteplayback nofullscreen"
+               oncontextmenu="return false;"></video>
+
+        <video class="loader-main-video" id="loaderVideo" src="lv_0_20261118065707.mp4"
+               autoplay muted playsinline preload="auto"
+               disablepictureinpicture disableremoteplayback
+               controlslist="nodownload noplaybackrate noremoteplayback nofullscreen"
+               oncontextmenu="return false;"></video>
     </div>
 
     <nav class="navbar">
@@ -1891,12 +1927,65 @@
            1. LOADING SCREEN
            ============================================================ */
         window.addEventListener('load', function () {
-            setTimeout(function () {
-                var loader = document.getElementById('loaderScreen');
-                if (loader) loader.remove();
+            var loader        = document.getElementById('loaderScreen');
+            var loaderVideo   = document.getElementById('loaderVideo');
+            var loaderBgVideo = document.getElementById('loaderBgVideo');
+            var finished      = false;
+
+            function finishLoading() {
+                if (finished) return;
+                finished = true;
+
+                if (loader) loader.classList.add('fade-out');
+
+                setTimeout(function () {
+                    if (loader && loader.parentNode) loader.remove();
+                    document.body.classList.remove('loading');
+                    startSlider();
+                }, 600);
+            }
+
+            if (!loader) {
                 document.body.classList.remove('loading');
                 startSlider();
-            }, 1800);
+                return;
+            }
+
+            if (loaderVideo) {
+                // Loading berakhir saat video utama selesai diputar
+                loaderVideo.addEventListener('ended', finishLoading);
+
+                // Fallback jika video gagal dimuat
+                loaderVideo.addEventListener('error', function () {
+                    setTimeout(finishLoading, 1000);
+                });
+
+                // Sinkronkan kedua video (main + bg pakai file yang sama)
+                try {
+                    loaderVideo.currentTime = 0;
+                    if (loaderBgVideo) loaderBgVideo.currentTime = 0;
+                } catch (e) {}
+
+                // Pastikan video mulai diputar (muted = boleh autoplay)
+                var p = loaderVideo.play();
+                if (p && p.catch) {
+                    p.catch(function () {
+                        setTimeout(finishLoading, 2500);
+                    });
+                }
+
+                // Background blur ikut diputar
+                if (loaderBgVideo) {
+                    var bp = loaderBgVideo.play();
+                    if (bp && bp.catch) bp.catch(function () {});
+                }
+
+                // Pengaman: jika video tidak pernah 'ended' (misal macet),
+                // tetap tutup loader setelah 2 menit
+                setTimeout(finishLoading, 120000);
+            } else {
+                setTimeout(finishLoading, 1800);
+            }
         });
 
         /* ============================================================
@@ -1942,7 +2031,7 @@
         });
 
         /* ============================================================
-           3. HALAMAN DETAIL APLIKASI (LOGIKA KLIK KARTU)
+           3. HALAMAN DETAIL APLIKASI
            ============================================================ */
         const appCards = document.querySelectorAll('.app-card');
         const appDetailPage = document.getElementById('appDetailPage');
@@ -1954,7 +2043,6 @@
         const detailCreator = document.getElementById('detailCreator');
         const detailBadge = document.getElementById('detailBadge');
 
-        /* --- Bottom Sheet Peringatan Aplikasi Pihak Ketiga --- */
         const bsModal   = document.getElementById('bsModal');
         const bsOverlay = document.getElementById('bsOverlay');
         const bsOk      = document.getElementById('bsOk');
@@ -1978,7 +2066,6 @@
             }
         });
 
-        /* --- Simpan file APK yang sedang aktif --- */
         let currentApkFile = '';
 
         function resetInstallButton() {
@@ -1987,7 +2074,6 @@
             btnInstall.textContent = 'Instal Aplikasi';
         }
 
-        /* --- Klik kartu aplikasi --- */
         appCards.forEach(card => {
             card.addEventListener('click', () => {
                 const logo    = card.querySelector('.app-logo').src;
@@ -2011,15 +2097,12 @@
                     detailBadge.style.display = 'none';
                 }
 
-                // Reset tombol instal setiap kali buka detail
                 resetInstallButton();
 
-                // Buka halaman detail
                 appDetailPage.classList.add('open');
                 appDetailPage.scrollTop = 0;
                 document.body.classList.add('no-scroll');
 
-                // Auto tampilkan bottom sheet jika tanpa verifikasi
                 if (!hasVerification) {
                     setTimeout(openVerificationSheet, 380);
                 } else {
@@ -2028,7 +2111,6 @@
             });
         });
 
-        // Tombol kembali di halaman detail
         btnBackDetail.addEventListener('click', () => {
             appDetailPage.classList.remove('open');
             document.body.classList.remove('no-scroll');
@@ -2045,14 +2127,12 @@
                 return;
             }
 
-            // --- 1. Ubah teks jadi "Lagi menginstal..." ---
             btnInstall.disabled = true;
             btnInstall.classList.remove('done', 'error');
             btnInstall.classList.add('installing');
             btnInstall.textContent = 'Lagi menginstal';
 
             try {
-                // --- 2. Unduh file APK dari server (fetch + blob) ---
                 const response = await fetch(currentApkFile, { cache: 'no-store' });
 
                 if (!response.ok) {
@@ -2061,7 +2141,6 @@
 
                 const blob = await response.blob();
 
-                // --- 3. Trigger unduhan ke perangkat pengguna ---
                 const objectUrl = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = objectUrl;
@@ -2070,10 +2149,8 @@
                 link.click();
                 link.remove();
 
-                // Bersihkan object URL setelah beberapa saat
                 setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
 
-                // --- 4. Unduhan selesai → ubah teks tombol ---
                 btnInstall.classList.remove('installing');
                 btnInstall.classList.add('done');
                 btnInstall.textContent = 'Proses instal sudah selesai';
@@ -2086,7 +2163,6 @@
                 btnInstall.textContent = 'Gagal — Coba lagi';
                 btnInstall.disabled = false;
 
-                // Kembalikan ke teks normal setelah 3 detik
                 setTimeout(() => {
                     if (btnInstall.classList.contains('error')) {
                         resetInstallButton();
